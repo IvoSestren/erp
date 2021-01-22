@@ -1,0 +1,8 @@
+debug: false
+
+logging:
+  level:
+    root: WARN
+    br.com.strn.erp.api: WARN
+
+spring:profiles:active: prod

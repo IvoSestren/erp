@@ -1,0 +1,57 @@
+logging:
+  file:
+    name: logs/api.log
+
+management:
+  endpoints:
+    enabled-by-default: true
+    web:exposure:include: '*'
+  security:enabled: false
+
+server:
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+  error:
+    whitelabel:
+      enabled: false
+  http2:
+    enabled: true
+  undertow:
+    accesslog:
+      dir: ./logs
+      enabled: false
+
+spring:
+  application:
+    name: ERP
+  datasource:
+    url: jdbc:postgresql://localhost:5432/erp?currentSchema=public
+    username: erp
+    password: erp
+    hikari:
+      minimumIdle: 0
+      maximumPoolSize: 100
+  flyway:
+    out-of-order: true
+  groovy:
+    template:
+      check-template-location: false
+  http:
+    converters:
+      preferred-json-mapper: gson
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+        temp:use_jdbc_metadata_defaults: true
+    open-in-view: true
+  profiles:
+    active: prod
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 50MB
+      max-request-size: 75MB

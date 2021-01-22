@@ -1,0 +1,17 @@
+debug: true
+
+logging:
+  level:
+    root: INFO
+    br.com.strn.erp.api: DEBUG
+    io.undertow.servlet: WARN
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: ERROR
+    org.springframework.boot.autoconfigure: WARN
+    org.springframework.boot.logging: INFO
+    org.springframework.web.servlet: WARN
+    org.springframework.web.servlet.mvc.method.annotation: INFO
+
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
