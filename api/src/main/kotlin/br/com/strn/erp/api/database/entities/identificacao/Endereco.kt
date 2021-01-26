@@ -5,6 +5,7 @@ import br.com.strn.erp.api.database.entities.geral.Bairro
 import br.com.strn.erp.api.database.entities.geral.Estado
 import br.com.strn.erp.api.database.entities.geral.Municipio
 import br.com.strn.erp.api.database.entities.geral.Pais
+import br.com.strn.erp.api.database.util.newHandle
 import org.hibernate.annotations.Where
 import javax.persistence.*
 
@@ -12,9 +13,9 @@ import javax.persistence.*
 @Table(name = "endereco")
 @Where(clause = "deleted_at is null")
 class Endereco(
-        var logradouro: String,
-        var numero: String,
-        var complemento: String,
+        var logradouro: String?,
+        var numero: String?,
+        var complemento: String?,
 
         @ManyToOne
         @JoinColumn(name = "id_pais")
@@ -36,6 +37,7 @@ class Endereco(
         @SequenceGenerator(name = "sq_endereco", sequenceName = "sq_endereco", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_endereco")
         @Column(name = "id", unique = true, nullable = false)
-        var id: Long? = null
-) : BaseEntity() {
-}
+        var id: Long? = null,
+
+        override var handle: String? = newHandle()
+) : BaseEntity(handle = handle)

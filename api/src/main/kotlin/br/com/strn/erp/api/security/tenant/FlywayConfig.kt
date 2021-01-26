@@ -1,14 +1,18 @@
 package br.com.strn.erp.api.security.tenant
 
 import br.com.strn.erp.api.database.dao.seguranca.TenantRepository
+import br.com.strn.erp.api.security.profile.Profile
 import org.flywaydb.core.Flyway
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import javax.sql.DataSource
 
+@Suppress("unused")
 @Configuration
-class FlywayConfig {
+class FlywayConfig(
+        private val profile: Profile
+) {
 
     private val logger = LoggerFactory.getLogger(javaClass)
 
@@ -17,9 +21,11 @@ class FlywayConfig {
         logger.info("Migration schema public")
         val flyway = Flyway
                 .configure()
-                .locations("db/migration/default")
+                .locations("db/migration/master")
                 .dataSource(dataSource)
                 .schemas(DEFAULT_SCHEMA)
+                .outOfOrder(true)
+                .table("migrations")
                 .load()
         flyway.migrate()
         return flyway
@@ -32,13 +38,25 @@ class FlywayConfig {
 
             logger.info("Migration schema $schema")
 
-            val flyway = Flyway
-                    .configure()
-                    .locations("db/migration/client")
-                    .dataSource(dataSource)
-                    .schemas(schema)
-                    .load()
-            flyway.migrate()
+            if (!profile.isDev()) {
+                Flyway.configure()
+                        .locations("db/migration/client")
+                        .dataSource(dataSource)
+                        .schemas(schema)
+                        .outOfOrder(true)
+                        .table("migrations")
+                        .load()
+                        .migrate()
+            } else {
+                Flyway.configure()
+                        .locations("db/migration/client", "db/migration/seed")
+                        .dataSource(dataSource)
+                        .schemas(schema)
+                        .outOfOrder(true)
+                        .table("migrations")
+                        .load()
+                        .migrate()
+            }
         }
         return true
     }

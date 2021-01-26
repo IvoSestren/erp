@@ -1,6 +1,7 @@
 package br.com.strn.erp.api.database.entities.geral
 
 import br.com.strn.erp.api.database.entities.BaseEntity
+import br.com.strn.erp.api.database.util.newHandle
 import org.hibernate.annotations.Where
 import javax.persistence.*
 
@@ -8,7 +9,7 @@ import javax.persistence.*
 @Table(name = "bairro")
 @Where(clause = "deleted_at is null")
 class Bairro(
-        var nome: String,
+        var nome: String?,
 
         @ManyToOne
         @JoinColumn(name = "id_municipio")
@@ -18,5 +19,7 @@ class Bairro(
         @SequenceGenerator(name = "sq_bairro", sequenceName = "sq_bairro", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_bairro")
         @Column(name = "id", unique = true, nullable = false)
-        var id: Long? = null
-) : BaseEntity()
+        var id: Long? = null,
+
+        override var handle: String? = newHandle()
+) : BaseEntity(handle = handle)

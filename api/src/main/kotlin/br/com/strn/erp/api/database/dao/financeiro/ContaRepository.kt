@@ -3,4 +3,4 @@ package br.com.strn.erp.api.database.dao.financeiro
 import br.com.strn.erp.api.database.dao.BaseRepository
 import br.com.strn.erp.api.database.entities.financeiro.Conta
 
-interface ContaRepository : BaseRepository<Conta, Long>
+interface ContaRepository : BaseRepository<Conta>

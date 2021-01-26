@@ -1,6 +1,7 @@
 package br.com.strn.erp.api.database.entities.seguranca
 
 import br.com.strn.erp.api.database.entities.BaseEntity
+import br.com.strn.erp.api.database.util.newHandle
 import org.hibernate.annotations.Where
 import javax.persistence.*
 
@@ -8,11 +9,13 @@ import javax.persistence.*
 @Table(name = "perfil")
 @Where(clause = "deleted_at is null")
 class Perfil(
-        var nome: String,
+        var nome: String?,
 
         @Id
         @SequenceGenerator(name = "sq_perfil", sequenceName = "sq_perfil", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_perfil")
         @Column(name = "id", unique = true, nullable = false)
-        var id: Long? = null
-) : BaseEntity()
+        var id: Long? = null,
+
+        override var handle: String? = newHandle()
+) : BaseEntity(handle = handle)

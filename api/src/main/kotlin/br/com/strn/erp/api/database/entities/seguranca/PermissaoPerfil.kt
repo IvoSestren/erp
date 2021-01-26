@@ -1,6 +1,7 @@
 package br.com.strn.erp.api.database.entities.seguranca
 
 import br.com.strn.erp.api.database.entities.BaseEntity
+import br.com.strn.erp.api.database.util.newHandle
 import org.hibernate.annotations.Where
 import javax.persistence.*
 
@@ -20,5 +21,7 @@ class PermissaoPerfil(
         @SequenceGenerator(name = "sq_permissaoperfil", sequenceName = "sq_permissaoperfil", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_permissaoperfil")
         @Column(name = "id", unique = true, nullable = false)
-        var id: Long? = null
-) : BaseEntity()
+        var id: Long? = null,
+
+        override var handle: String? = newHandle()
+) : BaseEntity(handle = handle)

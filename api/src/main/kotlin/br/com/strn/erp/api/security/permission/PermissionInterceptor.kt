@@ -2,7 +2,7 @@ package br.com.strn.erp.api.security.permission
 
 import br.com.strn.erp.api.errors.PermissionException
 import br.com.strn.erp.api.security.profile.Profile
-import br.com.strn.erp.api.service.PermissaoService
+import br.com.strn.erp.api.service.seguranca.PermissaoService
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter
@@ -18,22 +18,30 @@ class PermissionInterceptor(
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
 
-        if (!profile.isDev()) {
-            val hm = handler as HandlerMethod
-            val method = hm.method
+        if (profile.isDev())
+            return super.preHandle(request, response, handler)
 
-            if (annotatedPermission(method)) {
-                if (!permited(method)) throw PermissionException()
+        val hm = handler as HandlerMethod
+        val method = hm.method
 
-                return false
-            }
+        val res: Boolean
+
+        res = if (annotatedPermission(method)) {
+            permited(method)
+        } else {
+            false
         }
 
-        return super.preHandle(request, response, handler)
+        if (res) {
+            return super.preHandle(request, response, handler)
+        } else {
+            throw PermissionException()
+        }
     }
 
     private fun permited(method: Method): Boolean {
-        val permissionMethod = method.getDeclaredAnnotation(Permission::class.java)
+        val permissionMethod = method.getDeclaredAnnotation(Permission::class.java) ?: return false
+
         if (service.usuarioAtualTemPermissao(permissionMethod.value))
             return true
 

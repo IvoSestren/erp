@@ -3,4 +3,4 @@ package br.com.strn.erp.api.database.dao.financeiro
 import br.com.strn.erp.api.database.dao.BaseRepository
 import br.com.strn.erp.api.database.entities.financeiro.MovConta
 
-interface MovContaRepository : BaseRepository<MovConta, Long>
+interface MovContaRepository : BaseRepository<MovConta>

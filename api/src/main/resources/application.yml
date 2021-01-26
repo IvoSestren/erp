@@ -26,6 +26,9 @@ server:
 spring:
   application:
     name: ERP
+  cache:
+    infinispan:
+      config: infinispan.xml
   datasource:
     url: jdbc:postgresql://localhost:5432/erp?currentSchema=public
     username: erp
@@ -47,8 +50,24 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
         temp:use_jdbc_metadata_defaults: true
     open-in-view: true
-  profiles:
-    active: prod
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ivo@sestren.com.br
+    password: OpD4TTVjHYVGQQj5Fw-HDWrGVjtPZyMqqym_GLBs
+    properties:
+      mail:
+        smtp:
+          auth: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+          starttls:
+            enable: true
+  #  main:
+  #    lazy-initialization: true
+  quartz:
+    job-store-type: jdbc
   servlet:
     multipart:
       enabled: true

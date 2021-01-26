@@ -1,1 +1,0 @@
-insert into configuracao (chave, valor) values ('TOKEN_PASSWORD', trim(both from (encode(decode(md5(random()::text || current_timestamp || random()),'hex'),'base64')), '='));

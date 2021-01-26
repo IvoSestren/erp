@@ -1,7 +1,6 @@
 package br.com.strn.erp.api.converter.types
 
 import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import com.google.gson.JsonSerializationContext
 import com.google.gson.JsonSerializer
 import org.springframework.data.domain.Page
@@ -11,6 +10,8 @@ class GsonPage : JsonSerializer<Page<Any?>> {
     override fun serialize(src: Page<Any?>?, typeOfSrc: Type?, context: JsonSerializationContext?): JsonElement? {
         if ((src == null) || (context == null)) return null
 
+        return context.serialize(src.content)
+        /*
         val json = JsonObject()
 
         json.add("content", context.serialize(src.content))
@@ -26,5 +27,6 @@ class GsonPage : JsonSerializer<Page<Any?>> {
         json.add("pageable", context.serialize(src.pageable))
 
         return json
+        */
     }
 }

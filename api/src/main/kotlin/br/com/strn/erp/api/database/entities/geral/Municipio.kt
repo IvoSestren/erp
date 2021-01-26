@@ -1,6 +1,7 @@
 package br.com.strn.erp.api.database.entities.geral
 
 import br.com.strn.erp.api.database.entities.BaseEntity
+import br.com.strn.erp.api.database.util.newHandle
 import org.hibernate.annotations.Where
 import javax.persistence.*
 import javax.validation.constraints.NotNull
@@ -11,8 +12,8 @@ import javax.validation.constraints.NotNull
 @NamedEntityGraph(name = "municipio.estado", attributeNodes = [NamedAttributeNode("estado")])
 class Municipio(
 
-        var nome: String,
-        var ibge: String,
+        var nome: String?,
+        var ibge: String?,
 
         @ManyToOne
         @JoinColumn(name = "id_estado")
@@ -23,5 +24,7 @@ class Municipio(
         @SequenceGenerator(name = "sq_municipio", sequenceName = "sq_municipio", allocationSize = 1)
         @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sq_municipio")
         @Column(name = "id", unique = true, nullable = false)
-        var id: Long? = null
-) : BaseEntity()
+        var id: Long? = null,
+
+        override var handle: String? = newHandle()
+) : BaseEntity(handle = handle)

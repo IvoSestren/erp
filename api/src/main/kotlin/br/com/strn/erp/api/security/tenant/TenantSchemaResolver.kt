@@ -6,10 +6,7 @@ import org.springframework.stereotype.Component
 @Component
 class TenantSchemaResolver : CurrentTenantIdentifierResolver {
     override fun resolveCurrentTenantIdentifier(): String {
-        var schema = TenantContext.schema.get()
-        if (schema == null)
-            schema = FlywayConfig.DEFAULT_SCHEMA
-        return schema
+        return TenantContext.schema.get() ?: return FlywayConfig.DEFAULT_SCHEMA
     }
 
     override fun validateExistingCurrentSessions(): Boolean {

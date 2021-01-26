@@ -1,7 +1,8 @@
 package br.com.strn.erp.api.security.token
 
 import br.com.strn.erp.api.database.entities.enums.ConfiguracaoChave
-import br.com.strn.erp.api.service.ConfiguracaoService
+import br.com.strn.erp.api.security.profile.Profile
+import br.com.strn.erp.api.service.geral.ConfiguracaoService
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.DecodedJWT
@@ -14,31 +15,24 @@ import javax.servlet.http.HttpServletRequest
 @Component
 class TokenUtils(
         private val request: HttpServletRequest,
-        private val configuracaoService: ConfiguracaoService
+        private val configuracaoService: ConfiguracaoService,
+        private val profile: Profile
 ) {
 
-    fun generate(userId: Long, email: String): String {
+    fun generate(userHandle: String, email: String): String {
         return JWT.create()
                 .withIssuer("auth0")
                 .withSubject(email)
-                .withClaim("userId", userId)
+                .withClaim("userHandle", userHandle)
                 .withExpiresAt(Date.from(LocalDateTime.now().plusDays(90).atZone(ZoneId.systemDefault()).toInstant()))
                 .sign(algorithm())
     }
 
-    fun getAuthorization(): String {
-        return request.getHeader("Authorization")
-    }
+    val authorization: String
+        get() = request.getHeader("Authorization")
 
-    fun getEmail(token: String): String {
-        val jwt = getJWT(token)
-
-        return jwt.subject
-    }
-
-    fun getEmail(): String {
-        return getEmail(getAuthorization())
-    }
+    val email: String
+        get() = getEmail(authorization)
 
     private fun algorithm(): Algorithm {
         return Algorithm.HMAC512(password())
@@ -50,11 +44,20 @@ class TokenUtils(
     }
 
     private fun password(): String {
+        if (profile.isDev())
+            return DEFAULT_PASSWORD
+
         return try {
-            configuracaoService.findByChave(ConfiguracaoChave.TOKEN_PASSWORD).valor
+            configuracaoService.findByChave(ConfiguracaoChave.TOKEN_PASSWORD).valor!!
         } catch (e: Exception) {
             DEFAULT_PASSWORD
         }
+    }
+
+    private fun getEmail(token: String): String {
+        val jwt = getJWT(token)
+
+        return jwt.subject
     }
 
     companion object {
