@@ -69,5 +69,5 @@ tasks.withType<Test> {
 }
 
 tasks.getByName<BootJar>("bootJar") {
-    mainClass.set("br.com.strn.erp.api.ApiApplication")
+    mainClass.set("br.com.strn.erp.api.ApiApplicationKt")
 }
